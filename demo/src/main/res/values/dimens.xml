@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hundred_dips">100dp</dimen>
+    <dimen name="sixty_dips">60dp</dimen>
+</resources>

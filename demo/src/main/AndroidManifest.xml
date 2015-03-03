@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="ca.mahram.demo.picasso">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".PicassoDemoApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".IndexActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.PicassoOnceActivity"
+            android:label="@string/picasso_once"
+            android:parentActivityName=".IndexActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IndexActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.ContactsListActivity"
+            android:label="@string/contacts"
+            android:parentActivityName=".IndexActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IndexActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.PhotoSliderActivity"
+            android:label="@string/photo_slider"
+            android:parentActivityName=".IndexActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IndexActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.PhotoGridActivity"
+            android:label="@string/photo_grid"
+            android:parentActivityName=".IndexActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IndexActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.PhotoListActivity"
+            android:label="@string/photo_list"
+            android:parentActivityName=".IndexActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IndexActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.ContactActivity"
+            android:label="@string/photo_list"
+            android:parentActivityName=".activity.ContactsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.ContactsListActivity"/>
+        </activity>
+    </application>
+
+</manifest>
