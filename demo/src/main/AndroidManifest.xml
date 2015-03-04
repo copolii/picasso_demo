@@ -3,6 +3,7 @@
           package="ca.mahram.demo.picasso">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".PicassoDemoApplication"

@@ -10,15 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import ca.mahram.demo.picasso.activity.ContactsListActivity;
 import ca.mahram.demo.picasso.activity.PhotoGridActivity;
 import ca.mahram.demo.picasso.activity.PhotoListActivity;
 import ca.mahram.demo.picasso.activity.PhotoSliderActivity;
 import ca.mahram.demo.picasso.activity.PicassoOnceActivity;
+import ca.mahram.demo.picasso.misc.ListItemRow;
 
 public class IndexActivity
   extends ActionBarActivity
@@ -29,8 +28,8 @@ public class IndexActivity
 
     private enum DemoActivity {
         USE_ONCE (R.string.picasso_once, PicassoOnceActivity.class),
-        PHOTO_SLIDER (R.string.photo_slider, PhotoSliderActivity.class),
         CONTACTS (R.string.contacts, ContactsListActivity.class),
+        PHOTO_SLIDER (R.string.photo_slider, PhotoSliderActivity.class),
         GRID (R.string.photo_grid, PhotoGridActivity.class),
         LIST (R.string.photo_list, PhotoListActivity.class);
 
@@ -62,16 +61,6 @@ public class IndexActivity
         startActivity (new Intent (this, adapter.getItem (position).activity));
     }
 
-    private static class ViewHolder {
-        TextView title;
-        ImageView icon;
-
-        ViewHolder (final View view) {
-            title = (TextView) view.findViewById (android.R.id.text1);
-            icon = (ImageView) view.findViewById (android.R.id.icon);
-        }
-    }
-
     private class DemoAdapter extends BaseAdapter {
         private final DemoActivity[] activities = DemoActivity.values ();
         private final LayoutInflater inflater = LayoutInflater.from (IndexActivity.this);
@@ -90,7 +79,7 @@ public class IndexActivity
 
         private View newView (final ViewGroup parent) {
             final View v = inflater.inflate (R.layout.item_list, parent, false);
-            v.setTag (new ViewHolder (v));
+            v.setTag (new ListItemRow (v));
             return v;
         }
 
@@ -98,7 +87,7 @@ public class IndexActivity
             final View v = null == convertView ? newView (parent) : convertView;
             final DemoActivity activity = getItem (position);
 
-            final ViewHolder row = (ViewHolder) v.getTag ();
+            final ListItemRow row = (ListItemRow) v.getTag ();
 
             row.title.setText (activity.title);
             row.icon.setVisibility (View.GONE);
