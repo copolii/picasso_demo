@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
 
 /**
@@ -13,6 +14,7 @@ import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
 public class ContactActivity extends BaseDemoActivity {
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
+        setContentView (R.layout.activity_contact);
 
         final Intent intent = getIntent ();
 
