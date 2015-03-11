@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="ca.mahram.demo.picasso">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -24,6 +25,7 @@
         <activity
             android:name=".activity.PicassoOnceActivity"
             android:label="@string/picasso_once"
+            tools:ignore="UnusedAttribute"
             android:parentActivityName=".IndexActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -33,6 +35,7 @@
         <activity
             android:name=".activity.ContactsListActivity"
             android:label="@string/contacts"
+            tools:ignore="UnusedAttribute"
             android:parentActivityName=".IndexActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -42,6 +45,7 @@
         <activity
             android:name=".activity.PhotoSliderActivity"
             android:label="@string/photo_slider"
+            tools:ignore="UnusedAttribute"
             android:parentActivityName=".IndexActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,6 +55,7 @@
         <activity
             android:name=".activity.PhotoListActivity"
             android:label="@string/photo_list"
+            tools:ignore="UnusedAttribute"
             android:parentActivityName=".IndexActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -59,7 +64,8 @@
 
         <activity
             android:name=".activity.ContactActivity"
-            android:label="@string/photo_list"
+            android:label="@string/contacts"
+            tools:ignore="UnusedAttribute"
             android:parentActivityName=".activity.ContactsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
