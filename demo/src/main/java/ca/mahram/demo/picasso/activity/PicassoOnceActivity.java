@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
@@ -20,17 +22,14 @@ public class PicassoOnceActivity
     private static final int ICON2_PIXEL_WIDTH  = 800;
     private static final int ICON2_PIXEL_HEIGHT = 600;
 
-    private ImageView icon;
-    private ImageView icon1;
-    private ImageView icon2;
+    @InjectView (android.R.id.icon) ImageView icon;
+    @InjectView (android.R.id.icon1) ImageView icon1;
+    @InjectView (android.R.id.icon2) ImageView icon2;
 
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_one_off);
-
-        icon = (ImageView) findViewById (android.R.id.icon);
-        icon1 = (ImageView) findViewById (android.R.id.icon1);
-        icon2 = (ImageView) findViewById (android.R.id.icon2);
+        ButterKnife.inject (this);
         loadRandomImages ();
     }
 
@@ -71,6 +70,6 @@ public class PicassoOnceActivity
 
     @Override public boolean onCreateOptionsMenu (final Menu menu) {
         getMenuInflater ().inflate (R.menu.menu_singleton, menu);
-        return true;
+        return menu.hasVisibleItems ();
     }
 }

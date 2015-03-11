@@ -34,6 +34,7 @@ public class ContactsListActivity
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         list = new ListView (this);
+        list.setId (android.R.id.list);
         setContentView (list);
         list.setOnItemClickListener (this);
         getLoaderManager ().initLoader (LOADER_ID_CONTACTS, null, this);

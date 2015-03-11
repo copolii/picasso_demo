@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ca.mahram.demo.picasso.activity.ContactsListActivity;
 import ca.mahram.demo.picasso.activity.PhotoGridActivity;
 import ca.mahram.demo.picasso.activity.PhotoListActivity;
@@ -23,12 +25,12 @@ public class IndexActivity
   extends ActionBarActivity
   implements AdapterView.OnItemClickListener {
 
-    private ListView list;
-    private DemoAdapter adapter;
+    @InjectView (android.R.id.list) ListView    list;
+    private     DemoAdapter adapter;
 
     private enum DemoActivity {
         USE_ONCE (R.string.picasso_once, PicassoOnceActivity.class),
-        CONTACTS (R.string.contacts, ContactsListActivity.class),
+        CONTACT_LIST (R.string.contacts, ContactsListActivity.class),
         PHOTO_SLIDER (R.string.photo_slider, PhotoSliderActivity.class),
         GRID (R.string.photo_grid, PhotoGridActivity.class),
         LIST (R.string.photo_list, PhotoListActivity.class);
@@ -46,8 +48,7 @@ public class IndexActivity
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_index);
-
-        list = (ListView) findViewById (android.R.id.list);
+        ButterKnife.inject (this);
 
         adapter = new DemoAdapter ();
         list.setAdapter (adapter);
