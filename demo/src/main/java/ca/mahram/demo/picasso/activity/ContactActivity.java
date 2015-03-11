@@ -125,7 +125,7 @@ public class ContactActivity
                 return new CursorLoader (this,
                                          ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                                          new String[] {ContactsContract.CommonDataKinds.Email.ADDRESS},
-                                         ContactsContract.CommonDataKinds.Email._ID + "=?",
+                                         ContactsContract.CommonDataKinds.Email.RAW_CONTACT_ID + "=?",
                                          new String[] {String.valueOf (contactRawId)},
                                          null);
             case LOADER_ID_NUMBERS:
@@ -133,7 +133,7 @@ public class ContactActivity
                 return new CursorLoader (this,
                                          ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                                          new String[] {normalizedNumberOrNumberField ()},
-                                         ContactsContract.CommonDataKinds.Phone._ID + "=?",
+                                         ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID + "=?",
                                          new String[] {String.valueOf (contactRawId)},
                                          null);
             default:
