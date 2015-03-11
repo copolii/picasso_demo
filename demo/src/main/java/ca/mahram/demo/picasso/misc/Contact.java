@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -13,21 +14,18 @@ import lombok.ToString;
  */
 @EqualsAndHashCode @ToString
 public class Contact {
-    public final String name;
-    public final long   id;
-    private      Uri    uri;
+    public final long id;
 
-    private Contact (final Cursor cursor, final int idxRow, final int idxName) {
+    @Getter private final String name;
+    @Getter private final Uri    uri;
+    @Getter private final Uri    photoUri;
+
+    private Contact (final Cursor cursor, final int idxId, final int idxName) {
+        id = cursor.getLong (idxId);
         name = cursor.getString (idxName);
-        id = cursor.getLong (idxRow);
-    }
 
-    public Uri getUri () {
-        if (null == uri) {
-            uri = ContentUris.withAppendedId (ContactsContract.Contacts.CONTENT_URI, id);
-        }
-
-        return uri;
+        uri = getContactUri (id);
+        photoUri = getPhotoUri (uri);
     }
 
     static Contact[] extractAll (final Cursor cursor) {
@@ -45,5 +43,17 @@ public class Contact {
         } while (cursor.moveToNext ());
 
         return all;
+    }
+
+    public static Uri getContactUri (final long rawId) {
+        return ContentUris.withAppendedId (ContactsContract.Contacts.CONTENT_URI, rawId);
+    }
+
+    public static Uri getPhotoUri (final Uri contactUri) {
+        return Uri.withAppendedPath (contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+    }
+
+    public static Uri getPhotoUri (final long rawId) {
+        return getPhotoUri (getContactUri (rawId));
     }
 }

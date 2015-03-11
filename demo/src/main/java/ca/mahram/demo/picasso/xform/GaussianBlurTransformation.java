@@ -13,13 +13,13 @@ import com.squareup.picasso.Transformation;
  Source: https://gist.github.com/Mariuxtheone/903c35b4927c0df18cf8
  Created by mahram on 15-03-02.
  */
-public class GuassianBlurTransformation
+public class GaussianBlurTransformation
   implements Transformation {
 
     private final float radius;
     private final Context context;
 
-    public GuassianBlurTransformation (final Context c, final float r) {
+    public GaussianBlurTransformation (final Context c, final float r) {
         context = c;
         radius = r;
     }

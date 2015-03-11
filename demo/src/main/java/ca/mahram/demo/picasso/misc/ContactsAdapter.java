@@ -82,7 +82,7 @@ public class ContactsAdapter
         final Contact contact = getItem (position);
 
         final ListItemRow tag = (ListItemRow) v.getTag ();
-        tag.title.setText (contact.name);
+        tag.title.setText (contact.getName() );
         picasso.load (contact.getUri ())
                .placeholder (DEFAULT_PHOTOS[position % DEFAULT_PHOTOS.length])
                .into (tag.icon);
