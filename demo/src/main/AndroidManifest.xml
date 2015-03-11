@@ -49,15 +49,6 @@
         </activity>
 
         <activity
-            android:name=".activity.PhotoGridActivity"
-            android:label="@string/photo_grid"
-            android:parentActivityName=".IndexActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".IndexActivity"/>
-        </activity>
-
-        <activity
             android:name=".activity.PhotoListActivity"
             android:label="@string/photo_list"
             android:parentActivityName=".IndexActivity">

@@ -15,7 +15,6 @@ import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ca.mahram.demo.picasso.activity.ContactsListActivity;
-import ca.mahram.demo.picasso.activity.PhotoGridActivity;
 import ca.mahram.demo.picasso.activity.PhotoListActivity;
 import ca.mahram.demo.picasso.activity.PhotoSliderActivity;
 import ca.mahram.demo.picasso.activity.PicassoOnceActivity;
@@ -26,13 +25,12 @@ public class IndexActivity
   implements AdapterView.OnItemClickListener {
 
     @InjectView (android.R.id.list) ListView    list;
-    private     DemoAdapter adapter;
+    private                         DemoAdapter adapter;
 
     private enum DemoActivity {
         USE_ONCE (R.string.picasso_once, PicassoOnceActivity.class),
         CONTACT_LIST (R.string.contacts, ContactsListActivity.class),
         PHOTO_SLIDER (R.string.photo_slider, PhotoSliderActivity.class),
-        GRID (R.string.photo_grid, PhotoGridActivity.class),
         LIST (R.string.photo_list, PhotoListActivity.class);
 
         @StringRes final int                       title;
@@ -62,9 +60,10 @@ public class IndexActivity
         startActivity (new Intent (this, adapter.getItem (position).activity));
     }
 
-    private class DemoAdapter extends BaseAdapter {
+    private class DemoAdapter
+      extends BaseAdapter {
         private final DemoActivity[] activities = DemoActivity.values ();
-        private final LayoutInflater inflater = LayoutInflater.from (IndexActivity.this);
+        private final LayoutInflater inflater   = LayoutInflater.from (IndexActivity.this);
 
         @Override public int getCount () {
             return activities.length;
