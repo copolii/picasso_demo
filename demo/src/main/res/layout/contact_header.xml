@@ -37,13 +37,13 @@
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Contact Name"
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp">
         <requestFocus/>
     </TextView>
 
     <View
+        android:id="@+id/separator"
         android:layout_alignParentBottom="true"
         android:background="?attr/colorPrimary"
         android:layout_width="match_parent"

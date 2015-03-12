@@ -3,6 +3,7 @@ package ca.mahram.demo.picasso.activity;
 import android.annotation.TargetApi;
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -13,15 +14,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,10 +39,13 @@ import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
 import ca.mahram.demo.picasso.misc.Contact;
+import ca.mahram.demo.picasso.misc.Utils;
 import ca.mahram.demo.picasso.xform.GaussianBlurTransformation;
 import ca.mahram.demo.picasso.xform.PaletteGeneratorTransformation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import static ca.mahram.demo.picasso.misc.Utils.firstNonNull;
 
 /**
  Demos Picasso transformations
@@ -56,6 +63,8 @@ public class ContactActivity
     private static final int    DEFAULT_PALETTE_COLORS = 24;
     private static final String LOGTAG                 = "CONTACT";
 
+    private static final float BG_ALPHA = 0.5f;
+
     private Picasso picasso = ImageManager.get ().picasso;
 
     private Header header;
@@ -64,16 +73,21 @@ public class ContactActivity
     private Uri     contactUri;
     private Adapter adapter;
 
+    @InjectView (android.R.id.list) ListView list;
+    @InjectView (R.id.toolbar)      Toolbar  toolbar;
+
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
+        setContentView (R.layout.activity_contact);
+        ButterKnife.inject (this);
 
-        final ListView list = new ListView (this);
-        setContentView (list);
+        setSupportActionBar (toolbar);
+        initActionbar ();
 
         final LayoutInflater inflater = LayoutInflater.from (this);
         header = new Header (inflater.inflate (R.layout.contact_header, list, false));
         list.addHeaderView (header.root, null, false);
-        adapter = new Adapter ();
+        adapter = new Adapter (this);
         list.setAdapter (adapter);
 
         final Intent intent = getIntent ();
@@ -93,11 +107,26 @@ public class ContactActivity
 
         Log.d (LOGTAG, "PhotoUri: " + String.valueOf (photoUri));
 
-        picasso.load (photoUri)
-               .transform (new GaussianBlurTransformation (this, PHOTO_BLUR_RADIUS))
-               .into (header.blurr);
+        final Context context = this;
 
         picasso.load (photoUri)
+               .transform (new GaussianBlurTransformation (context, PHOTO_BLUR_RADIUS))
+               .placeholder (R.drawable.ic_default_2)
+               .into (header.blurr, new Callback () {
+                   @Override public void onSuccess () {
+
+                   }
+
+                   @Override public void onError () {
+                       picasso.load (R.drawable.ic_default_2)
+                              .placeholder (R.drawable.ic_default_2)
+                              .transform (new GaussianBlurTransformation (context, PHOTO_BLUR_RADIUS))
+                              .into (header.blurr);
+                   }
+               });
+
+        picasso.load (photoUri)
+               .placeholder (R.drawable.ic_default_1)
                .transform (new PaletteGeneratorTransformation (DEFAULT_PALETTE_COLORS))
                .resizeDimen (R.dimen.profile_photo_size, R.dimen.profile_photo_size)
                .centerCrop ()
@@ -124,27 +153,20 @@ public class ContactActivity
             case LOADER_ID_EMAILS:
                 return new CursorLoader (this,
                                          ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                                         new String[] {ContactsContract.CommonDataKinds.Email.ADDRESS},
+                                         new String[] {ContactsContract.CommonDataKinds.Email.DATA},
                                          ContactsContract.CommonDataKinds.Email.RAW_CONTACT_ID + "=?",
                                          new String[] {String.valueOf (contactRawId)},
                                          null);
             case LOADER_ID_NUMBERS:
-
                 return new CursorLoader (this,
                                          ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                         new String[] {normalizedNumberOrNumberField ()},
+                                         new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER},
                                          ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID + "=?",
                                          new String[] {String.valueOf (contactRawId)},
                                          null);
             default:
                 throw new IllegalArgumentException ("Unknown loader id");
         }
-    }
-
-    @TargetApi (Build.VERSION_CODES.JELLY_BEAN) private String normalizedNumberOrNumberField () {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-               ? ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
-               : ContactsContract.CommonDataKinds.Phone.NUMBER;
     }
 
     @Override public void onLoadFinished (final Loader<Cursor> loader, final Cursor data) {
@@ -182,7 +204,35 @@ public class ContactActivity
         adapter.notifyDataSetInvalidated ();
     }
 
-    private static class Palettier
+    private void assignMutedColors (final Palette.Swatch muted) {
+        if (null == muted)
+            return;
+
+        header.title.setTextColor (muted.getBodyTextColor ());
+        header.title.setBackgroundColor (Utils.applyAlpha (muted.getRgb (), BG_ALPHA));
+    }
+
+    private void assignVibrantColors (final Palette.Swatch vibrant) {
+        if (null == vibrant)
+            return;
+
+        final int toolbarColor = vibrant.getRgb ();
+        final int statusbarColor = darken (toolbarColor, 0.2f);
+
+        toolbar.setBackgroundColor (toolbarColor);
+        toolbar.setTitleTextColor (vibrant.getTitleTextColor ());
+        header.separator.setBackgroundColor (toolbarColor);
+        setMaterialColors (toolbarColor, statusbarColor);
+    }
+
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    private void setMaterialColors (final int primary, final int primaryDark) {
+        final Window window = getWindow ();
+        window.setStatusBarColor (primaryDark);
+        window.setNavigationBarColor (primary);
+    }
+
+    private class Palettier
       extends PaletteGeneratorTransformation.Callback {
 
         public Palettier (final ImageView t) {
@@ -190,14 +240,27 @@ public class ContactActivity
         }
 
         @Override protected void onPalette (final Palette palette) {
+            if (null == palette)
+                return;
 
+            assignVibrantColors (firstNonNull (palette.getVibrantSwatch (),
+                                               palette.getDarkVibrantSwatch (),
+                                               palette.getLightVibrantSwatch ()));
+            assignMutedColors (firstNonNull (palette.getMutedSwatch (),
+                                             palette.getDarkMutedSwatch (),
+                                             palette.getLightMutedSwatch ()));
         }
     }
 
-    private class Adapter
+    private static class Adapter
       extends BaseAdapter {
 
         private final List<ContactMethod> entries = new ArrayList<> ();
+        private final LayoutInflater inflater;
+
+        Adapter (final Context context) {
+            inflater = LayoutInflater.from (context);
+        }
 
         private void clear (final ContactMethodType type) {
             int i = 0;
@@ -245,26 +308,32 @@ public class ContactActivity
         }
 
         @Override public View getView (final int position, final View convertView, final ViewGroup parent) {
-            final TextView row = (TextView) (convertView == null ? newView (parent) : convertView);
+            final View view = convertView == null ? newView (parent) : convertView;
+            final ContactMethodRow row = (ContactMethodRow) view.getTag ();
 
             final ContactMethod contactMethod = getItem (position);
 
             switch (contactMethod.type) {
                 case EMAIL:
-                    row.setCompoundDrawablesWithIntrinsicBounds (R.drawable.ic_communication_email, 0, 0, 0);
+                    row.text.setCompoundDrawablesWithIntrinsicBounds (R.drawable.ic_communication_email, 0, 0, 0);
+                    break;
                 case PHONE:
-                    row.setCompoundDrawablesWithIntrinsicBounds (R.drawable.ic_communication_phone, 0, 0, 0);
+                    row.text.setCompoundDrawablesWithIntrinsicBounds (R.drawable.ic_communication_phone, 0, 0, 0);
+                    break;
                 default:
-                    row.setCompoundDrawablesWithIntrinsicBounds (0, 0, 0, 0);
+                    row.text.setCompoundDrawablesWithIntrinsicBounds (0, 0, 0, 0);
+                    break;
             }
 
-            row.setText (contactMethod.data);
+            row.text.setText (contactMethod.data);
 
-            return row;
+            return view;
         }
 
         private View newView (final ViewGroup parent) {
-            return new TextView (ContactActivity.this);
+            final View view = inflater.inflate (R.layout.item_contact_method, parent, false);
+            view.setTag (new ContactMethodRow (view));
+            return view;
         }
     }
 
@@ -273,6 +342,7 @@ public class ContactActivity
         @InjectView (R.id.blurred_photo) ImageView blurr;
         @InjectView (R.id.photo)         ImageView photo;
         @InjectView (android.R.id.title) TextView  title;
+        @InjectView (R.id.separator)     View      separator;
 
         Header (final View view) {
             root = view;
@@ -283,6 +353,14 @@ public class ContactActivity
     private enum ContactMethodType {
         PHONE,
         EMAIL
+    }
+
+    static class ContactMethodRow {
+        @InjectView (android.R.id.text1) TextView text;
+
+        ContactMethodRow (final View view) {
+            ButterKnife.inject (this, view);
+        }
     }
 
     @EqualsAndHashCode @ToString
@@ -302,6 +380,7 @@ public class ContactActivity
             // if same type, compara data
             if (lhs.type == rhs.type) {
                 // same string or both null
+                //noinspection StringEquality
                 if (lhs.data == rhs.data)
                     return 0;
 

@@ -2,7 +2,6 @@ package ca.mahram.demo.picasso.activity;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -22,7 +21,10 @@ import butterknife.InjectView;
 import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
+import ca.mahram.demo.picasso.misc.Utils;
 import ca.mahram.demo.picasso.xform.PaletteGeneratorTransformation;
+
+import static ca.mahram.demo.picasso.misc.Utils.firstNonNull;
 
 /**
  A list style recycler view
@@ -140,43 +142,25 @@ public class PhotoListActivity
             if (null == palette)
                 return;
 
-            final Palette.Swatch bg = pickPalette (palette.getLightMutedSwatch (),
-                                                   palette.getMutedSwatch (),
-                                                   palette.getDarkMutedSwatch ());
+            final Palette.Swatch bg = firstNonNull (palette.getLightMutedSwatch (),
+                                                    palette.getMutedSwatch (),
+                                                    palette.getDarkMutedSwatch ());
             if (null != bg) {
                 final int bgColor = bg.getRgb ();
 
-                setTextColors (card.text,
-                               bg.getBodyTextColor (),
-                               Color.argb ((int) (ALPHA * 255),
-                                           Color.red (bgColor),
-                                           Color.green (bgColor),
-                                           Color.blue (bgColor)
-                                          ));
+                setTextColors (card.text, bg.getBodyTextColor (), Utils.applyAlpha (bgColor, ALPHA));
             } else
                 setNoSwatch (card.text);
 
-            final Palette.Swatch fg = pickPalette (palette.getDarkVibrantSwatch (),
-                                                   palette.getVibrantSwatch (),
-                                                   palette.getLightVibrantSwatch ());
+            final Palette.Swatch fg = firstNonNull (palette.getDarkVibrantSwatch (),
+                                                    palette.getVibrantSwatch (),
+                                                    palette.getLightVibrantSwatch ());
 
             if (null != fg) {
-                setTextColors (card.title, fg.getRgb (), fg.getTitleTextColor () );
+                setTextColors (card.title, fg.getRgb (), fg.getTitleTextColor ());
             } else {
                 setNoSwatch (card.title);
             }
-        }
-
-        private Palette.Swatch pickPalette (final Palette.Swatch... swatches) {
-            // we only need one good swatch
-            for (final Palette.Swatch swatch : swatches) {
-                if (null == swatch)
-                    continue;
-
-                return swatch;
-            }
-
-            return null;
         }
     }
 }

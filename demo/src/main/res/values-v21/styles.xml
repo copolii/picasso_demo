@@ -3,6 +3,7 @@
 
     <style name="AppTheme" parent="_base_">
         <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/primary</item>
     </style>
 
 </resources>

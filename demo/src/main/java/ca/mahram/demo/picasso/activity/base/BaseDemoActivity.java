@@ -17,8 +17,14 @@ public class BaseDemoActivity extends ActionBarActivity {
 
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
+        initActionbar ();
+    }
 
+    protected void initActionbar () {
         final ActionBar ab = getSupportActionBar ();
+
+        if (null == ab) return;
+
         ab.setDisplayHomeAsUpEnabled (true);
     }
 
