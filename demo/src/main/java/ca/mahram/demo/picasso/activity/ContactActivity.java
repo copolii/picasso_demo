@@ -45,6 +45,9 @@ import ca.mahram.demo.picasso.xform.PaletteGeneratorTransformation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import static android.provider.BaseColumns._ID;
+import static android.provider.ContactsContract.Contacts.DISPLAY_NAME;
+import static android.provider.ContactsContract.Contacts.LOOKUP_KEY;
 import static ca.mahram.demo.picasso.misc.Utils.firstNonNull;
 
 /**
@@ -148,7 +151,7 @@ public class ContactActivity
                 Log.d (LOGTAG, "Loading " + String.valueOf (contactUri));
                 return new CursorLoader (this,
                                          contactUri,
-                                         new String[] {ContactsContract.Contacts.DISPLAY_NAME},
+                                         new String[] {DISPLAY_NAME },
                                          null, null, null);
             case LOADER_ID_EMAILS:
                 return new CursorLoader (this,
@@ -227,6 +230,8 @@ public class ContactActivity
 
     @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     private void setMaterialColors (final int primary, final int primaryDark) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+
         final Window window = getWindow ();
         window.setStatusBarColor (primaryDark);
         window.setNavigationBarColor (primary);
