@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
@@ -46,14 +46,14 @@ public class PhotoListActivity
     static class PhotoCard
       extends RecyclerView.ViewHolder {
 
-        @InjectView (android.R.id.title)    TextView    title;
-        @InjectView (R.id.photo)            ImageView   photo;
-        @InjectView (android.R.id.progress) ProgressBar progress;
-        @InjectView (R.id.text)             TextView    text;
+        @Bind (android.R.id.title)    TextView    title;
+        @Bind (R.id.photo)            ImageView   photo;
+        @Bind (android.R.id.progress) ProgressBar progress;
+        @Bind (R.id.text)             TextView    text;
 
         public PhotoCard (final View itemView) {
             super (itemView);
-            ButterKnife.inject (this, itemView);
+            ButterKnife.bind (this, itemView);
         }
     }
 

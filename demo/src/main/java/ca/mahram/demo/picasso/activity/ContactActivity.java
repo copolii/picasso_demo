@@ -33,8 +33,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
@@ -45,9 +45,7 @@ import ca.mahram.demo.picasso.xform.PaletteGeneratorTransformation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import static android.provider.BaseColumns._ID;
 import static android.provider.ContactsContract.Contacts.DISPLAY_NAME;
-import static android.provider.ContactsContract.Contacts.LOOKUP_KEY;
 import static ca.mahram.demo.picasso.misc.Utils.firstNonNull;
 
 /**
@@ -76,19 +74,20 @@ public class ContactActivity
     private Uri     contactUri;
     private Adapter adapter;
 
-    @InjectView (android.R.id.list) ListView list;
-    @InjectView (R.id.toolbar)      Toolbar  toolbar;
+    @Bind (android.R.id.list) ListView list;
+    @Bind (R.id.toolbar)      Toolbar  toolbar;
 
     @Override protected void onCreate (final Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_contact);
-        ButterKnife.inject (this);
+        ButterKnife.bind (this);
 
         setSupportActionBar (toolbar);
         initActionbar ();
 
         final LayoutInflater inflater = LayoutInflater.from (this);
         header = new Header (inflater.inflate (R.layout.contact_header, list, false));
+
         list.addHeaderView (header.root, null, false);
         adapter = new Adapter (this);
         list.setAdapter (adapter);
@@ -344,14 +343,14 @@ public class ContactActivity
 
     static class Header {
         private final                    View      root;
-        @InjectView (R.id.blurred_photo) ImageView blurr;
-        @InjectView (R.id.photo)         ImageView photo;
-        @InjectView (android.R.id.title) TextView  title;
-        @InjectView (R.id.separator)     View      separator;
+        @Bind (R.id.blurred_photo) ImageView blurr;
+        @Bind (R.id.photo)         ImageView photo;
+        @Bind (android.R.id.title) TextView  title;
+        @Bind (R.id.separator)     View      separator;
 
         Header (final View view) {
             root = view;
-            ButterKnife.inject (this, root);
+            ButterKnife.bind (this, root);
         }
     }
 
@@ -361,10 +360,10 @@ public class ContactActivity
     }
 
     static class ContactMethodRow {
-        @InjectView (android.R.id.text1) TextView text;
+        @Bind (android.R.id.text1) TextView text;
 
         ContactMethodRow (final View view) {
-            ButterKnife.inject (this, view);
+            ButterKnife.bind (this, view);
         }
     }
 

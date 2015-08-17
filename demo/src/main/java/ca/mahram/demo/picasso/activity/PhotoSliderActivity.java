@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ca.mahram.demo.picasso.ImageManager;
 import ca.mahram.demo.picasso.R;
 import ca.mahram.demo.picasso.activity.base.BaseDemoActivity;
@@ -44,12 +44,12 @@ public class PhotoSliderActivity
 
     static class PhotoPage {
         private final                       View        root;
-        @InjectView (R.id.photo)            ImageView   photo;
-        @InjectView (android.R.id.progress) ProgressBar progress;
+        @Bind (R.id.photo)            ImageView   photo;
+        @Bind (android.R.id.progress) ProgressBar progress;
 
         PhotoPage (final View page) {
             root = page;
-            ButterKnife.inject (this, page);
+            ButterKnife.bind (this, page);
         }
     }
 

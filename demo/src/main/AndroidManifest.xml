@@ -44,6 +44,7 @@
 
         <activity
             android:name=".activity.PhotoSliderActivity"
+            android:theme="@style/AppTheme.Slider"
             android:label="@string/photo_slider"
             tools:ignore="UnusedAttribute"
             android:parentActivityName=".IndexActivity">
